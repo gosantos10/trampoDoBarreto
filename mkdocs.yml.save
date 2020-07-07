@@ -1,0 +1,5 @@
+site_name: Servidor AD
+nav:
+	- Home: 'index.md'
+	- 'Servidor AD': 
+		- 'File Sharing usando Samba': 'index.md'

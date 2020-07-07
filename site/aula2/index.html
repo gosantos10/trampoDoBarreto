@@ -1,0 +1,427 @@
+
+
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.2">
+    
+    
+      
+        <title>2. Criação de Servidor e hospedagem de cliente - Servidor AD</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.a2408e81.min.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#criando-usuario-cliente-e-hospendando-o-em-um-servidor" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="Servidor AD" class="md-header-nav__button md-logo" aria-label="Servidor AD">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Servidor AD
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              2. Criação de Servidor e hospedagem de cliente
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Servidor AD" class="md-nav__button md-logo" aria-label="Servidor AD">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Servidor AD
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../file_sharing/" title="1. File Sharing usando Samba" class="md-nav__link">
+      1. File Sharing usando Samba
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        2. Criação de Servidor e hospedagem de cliente
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="2. Criação de Servidor e hospedagem de cliente" class="md-nav__link md-nav__link--active">
+      2. Criação de Servidor e hospedagem de cliente
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-criacao-de-servidor" class="md-nav__link">
+    1. Criação de servidor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-iniciar-alocacao-do-cliente" class="md-nav__link">
+    2. Iniciar alocação do cliente
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../aula3/" title="3. Criação e hospedagem da página web" class="md-nav__link">
+      3. Criação e hospedagem da página web
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-criacao-de-servidor" class="md-nav__link">
+    1. Criação de servidor
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-iniciar-alocacao-do-cliente" class="md-nav__link">
+    2. Iniciar alocação do cliente
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="criando-usuario-cliente-e-hospendando-o-em-um-servidor">Criando Usuário Cliente e hospendando-o em um servidor</h1>
+<h2 id="1-criacao-de-servidor">1. Criação de servidor</h2>
+<blockquote>
+<p>Acessar máquina linux.
+Atualizar os pacotes utilizando comandos <code>sudo su</code> <code>apt update</code> <code>apt upgrade</code></p>
+<p>Instalar dependências necessárias: <code>apt install samba smbclient krb5-user dnsutils winbind</code></p>
+<p>Dar reboot para ativar serviços <code>reboot</code></p>
+<p>Verificar status dos serviços instalados <code>testparm</code></p>
+<p>Fazer backup do arquivo do serviço samba <code>cp /etc/samba/smb.conf /etc/samba/smb.conf.old</code></p>
+<p>Remover arquivo antigo do serviço samba <code>rm /etc/samba/smb.conf</code></p>
+<p>Promover um membro de domínio existente <code>samba-tool domain provision</code></p>
+<p>Colocar IP da máquina Linux no comando <code>samba-tool domain provision</code></p>
+<p>Alterar o "Net Bios Name" para remover duplicidade que gerava erro</p>
+<p>Reboot na máquina para salvar alterações <code>reboot</code></p>
+<p>Fazer backup do arquivo <code>cp /var/lib/samba/private/krb5.conf /etc/</code></p>
+<p>Parar serviços para realizar ajustes <code>systemctl stop smbd nmbd winbind systemd-resolved</code></p>
+<p>Desabilitar serviços para realizar ajustes <code>systemctl disable smbd nmbd winbind systemd-resolved</code></p>
+<p>Remover arquivos para realizar ajustes <code>systemctl unmask samba-ad-dc</code></p>
+<p>Criar link lógico <code>ll /etc/resolv.conf</code></p>
+<p>Remover a referência ao link simbólico contida no <code>/etc/resolv</code> usando <code>rm /etc/resolv.conf</code></p>
+<p>Editar arquivo <code>/etc/resolv.conf</code> incluindo <code>domain local.[user]</code> e <code>nameserver 127.0.0.1</code></p>
+<p>Editar arquivo /usr/share/samba/setup incluindo <code>defaultRealm: [user].local</code></p>
+<p>Reiniciando arquivos anteriormente parados <code>systemctl start samba-ad-dc</code></p>
+<p>Ativar arquivos anteriormente parados <code>systemctl enable samba-ad-dc</code></p>
+<p>Criando backup do arquivo krb5.conf <code>cp /usr/share/samba/setup/krb5.conf /etc/</code></p>
+<p>Verificar status do usuário administrador <code>kinit Administrator</code></p>
+<p>Verificar status do domínio <code>samba-tool domain level show</code></p>
+</blockquote>
+<h2 id="2-iniciar-alocacao-do-cliente">2. Iniciar alocação do cliente</h2>
+<blockquote>
+<p>Iniciar máquina virtual windows</p>
+<p>Certficar-se de que as configurações de rede são iguais em ambas as máquinas</p>
+<p>Verificar conexão entre maquinas utilizando <code>ping ip linux</code> na máquina windows e <code>ping ip windows</code> na máquina linux</p>
+<p>Verificar conexão de internet acessando página web</p>
+<p>Alterar configurações de rede passando ip da máquina linux como DNS e gateway <code>central de rede e compartilhamento&gt;alterar as configurações do adaptador&gt;conexão local&gt;protocolo tcp/ip versão 4&gt; propriedades&gt;DNS&gt;Adicionar</code> e <code>Configurações IP&gt;Adicionar Gateway</code></p>
+<p>Alterar configurações para acessar domínio criado <code>painel de controle&gt;sistema e segurança&gt;sistema&gt;alterar configurações&gt;alterar&gt;domínio</code></p>
+<p>Reinicia windows</p>
+<p>Criar usuário na máquina linux <code>samba-tool user create [nome usuário]</code></p>
+<p>Definir senha</p>
+<p>Logar no Windows com novo usuário que foi criado</p>
+<p>Caso internet não esteja funcionando, desativar e ativar o adaptador em <code>Central de rede e compartilhamento</code></p>
+</blockquote>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../file_sharing/" title="1. File Sharing usando Samba" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Anterior
+                </span>
+                1. File Sharing usando Samba
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../aula3/" title="3. Criação e hospedagem da página web" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Próximo
+                </span>
+                3. Criação e hospedagem da página web
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5f27aba8.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "search.config.lang": "pt", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Digite para iniciar a busca", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.27c6a5e6.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

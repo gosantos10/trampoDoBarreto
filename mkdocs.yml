@@ -1,0 +1,14 @@
+site_name: Servidor AD
+
+pages:
+    - Home: index.md
+    - 1. File Sharing usando Samba: file_sharing.md
+    - 2. Criação de Servidor e hospedagem de cliente: aula2.md
+    - 3. Criação e hospedagem da página web: aula3.md
+theme:
+  # Estilo
+  name: material
+  language: pt
+  # slate = fundo escuro. default = none (branco)
+  palette:
+    scheme: slate

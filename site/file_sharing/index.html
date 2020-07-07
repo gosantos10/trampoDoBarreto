@@ -1,0 +1,802 @@
+
+
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.2">
+    
+    
+      
+        <title>1. File Sharing usando Samba - Servidor AD</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.a2408e81.min.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#file-sharing-usando-samba" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="Servidor AD" class="md-header-nav__button md-logo" aria-label="Servidor AD">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Servidor AD
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              1. File Sharing usando Samba
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Servidor AD" class="md-nav__button md-logo" aria-label="Servidor AD">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Servidor AD
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        1. File Sharing usando Samba
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="1. File Sharing usando Samba" class="md-nav__link md-nav__link--active">
+      1. File Sharing usando Samba
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-download-dos-iso-do-windows-e-linux" class="md-nav__link">
+    1. Download dos ISO do Windows e Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configurando-sua-vm-ubuntu-desktopubuntu-serverwindows-7-pro" class="md-nav__link">
+    2. Configurando sua VM - Ubuntu Desktop/Ubuntu Server/Windows 7 Pro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-instalando-o-ubuntu-desktop" class="md-nav__link">
+    3. Instalando o Ubuntu Desktop
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-instalando-o-ubuntu-server" class="md-nav__link">
+    3.1 Instalando o Ubuntu Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-instalando-o-windows-7-professional" class="md-nav__link">
+    3.2 Instalando o Windows 7 professional
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configurando-o-ubuntu-server" class="md-nav__link">
+    4. Configurando o Ubuntu Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-instalando-e-configurando-o-samba" class="md-nav__link">
+    5. Instalando e Configurando o Samba
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testando-a-conectividade-entre-o-windows-e-o-linux-server" class="md-nav__link">
+    6. Testando a conectividade entre o Windows e o Linux Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-file-sharing-entre-ambas-as-maquinas" class="md-nav__link">
+    7. File Sharing entre ambas as Máquinas
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-nao-consegue-ver-a-pasta" class="md-nav__link">
+    8. Não consegue ver a Pasta?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../aula2/" title="2. Criação de Servidor e hospedagem de cliente" class="md-nav__link">
+      2. Criação de Servidor e hospedagem de cliente
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../aula3/" title="3. Criação e hospedagem da página web" class="md-nav__link">
+      3. Criação e hospedagem da página web
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-download-dos-iso-do-windows-e-linux" class="md-nav__link">
+    1. Download dos ISO do Windows e Linux
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-configurando-sua-vm-ubuntu-desktopubuntu-serverwindows-7-pro" class="md-nav__link">
+    2. Configurando sua VM - Ubuntu Desktop/Ubuntu Server/Windows 7 Pro
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-instalando-o-ubuntu-desktop" class="md-nav__link">
+    3. Instalando o Ubuntu Desktop
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#31-instalando-o-ubuntu-server" class="md-nav__link">
+    3.1 Instalando o Ubuntu Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#32-instalando-o-windows-7-professional" class="md-nav__link">
+    3.2 Instalando o Windows 7 professional
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-configurando-o-ubuntu-server" class="md-nav__link">
+    4. Configurando o Ubuntu Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-instalando-e-configurando-o-samba" class="md-nav__link">
+    5. Instalando e Configurando o Samba
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-testando-a-conectividade-entre-o-windows-e-o-linux-server" class="md-nav__link">
+    6. Testando a conectividade entre o Windows e o Linux Server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-file-sharing-entre-ambas-as-maquinas" class="md-nav__link">
+    7. File Sharing entre ambas as Máquinas
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-nao-consegue-ver-a-pasta" class="md-nav__link">
+    8. Não consegue ver a Pasta?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="file-sharing-usando-samba">File Sharing usando Samba</h1>
+<h2 id="1-download-dos-iso-do-windows-e-linux">1. Download dos ISO do Windows e Linux</h2>
+<blockquote>
+<ol>
+<li>
+<p>Faça o download e instale o <a href="https://www.virtualbox.com">Virtual Box para Ubuntu versão 18.04</a>;</p>
+</li>
+<li>
+<p>faça o download do Ubuntu 18.04 <a href="https://releases.ubuntu.com/18.04.4/">Server ou Desktop</a>;</p>
+</li>
+<li>
+<p>Faça o download do <a href="https://www.mediafire.com/file/6qlsra8hun0f8ks/Win7_Pro_SP1_BrazilianPortuguese_x64_-_PHDowns.iso.torrent/file?fbclid=IwAR30flNmma_F6D-3VhedeRrhegOm_TU4-KNVOLfB7S3w8MQ2px8IejOIX68">Windows 7 Professional</a></p>
+</li>
+</ol>
+</blockquote>
+<h2 id="2-configurando-sua-vm-ubuntu-desktopubuntu-serverwindows-7-pro">2. Configurando sua VM - Ubuntu Desktop/Ubuntu Server/Windows 7 Pro</h2>
+<blockquote>
+<ol>
+<li>Abra o Virtual Box e clique em Novo.</li>
+<li>Dê um nome para sua Máquina Virtual.</li>
+<li>Selecione a quantidade de RAM que a máquina virtual poderá consumir (<strong><em>recomendado: 2048 MB</em></strong>).</li>
+<li>Selecione "Criar um novo disco rígido virtual agora".</li>
+<li>Marque a opção "VDI - VirtualBox Disk Image".</li>
+<li>Marque a opção "Dinamicamente Alocado".</li>
+<li>Selecione o tamanho do seu Disco Virtual (o tamanho do HD da máquina). <strong><em>Recomendado: valor maior que 20GB</em></strong></li>
+<li>Clique em "Criar".</li>
+<li>Selecione a sua Máquina virtual e Clique em Configurações.</li>
+<li>Clique em Rede.<ul>
+<li>Se estiver usando WIFI, selecione a Opção "habilitar placa de rede" e selecione a opção "placa em modo bridge".</li>
+<li>Caso contrário, selecione a opção "rede interna".</li>
+</ul>
+</li>
+<li>Clique em "Armazenamento", clique em "vazio" e em "drive óptico" Selecione a .ISO que você baixou do <strong>Ubuntu Desktop 18.04</strong> ou <strong>Ubuntu Server 18.04</strong>  ou <strong>Windows 7 Pro</strong>.</li>
+<li>Clique em Okay e clique em Iniciar.</li>
+</ol>
+</blockquote>
+<h2 id="3-instalando-o-ubuntu-desktop">3. Instalando o Ubuntu Desktop</h2>
+<blockquote>
+<ol>
+<li>
+<p>Após clicar em Iniciar no VirtualBox, selecione sua linguagem (português do Brasil) clique em <em>"Instalar Ubuntu"</em>.</p>
+</li>
+<li>
+<p>Selecione o padrão de seu teclado. Para Português do Brasil, selecione *Português (Brasil)</p>
+</li>
+<li>
+<p>Na pŕoxima tela:</p>
+<ul>
+<li>Se quiser uma instalação que venha editor de texto, calculadora e afins, selecione "Instalação completa".</li>
+<li>Para fazer o compartilhamento de arquivos, não precisamos de arquivos a mais, por isso <em>recomendamos selecionar a opção "Instalação minima"</em>.</li>
+<li>Deixe marcado a opção baixar atualizações enquanto instala o Ubuntu</li>
+</ul>
+</li>
+<li>
+<p>Selecione a opção "Apagar Disco e Reinstalar o Ubuntu".</p>
+</li>
+<li>
+<p>Selecione seu fuso horário. Em São Paulo, o fuso horário é -3GMT.</p>
+</li>
+<li>
+<p>Na próxima tela:</p>
+<ul>
+<li>Digite seu nome;</li>
+<li>Digite o nome do host que o seu computador terá. **Tente NÃO usar o nome de outro computador conectado à mesma rede.</li>
+<li>Escolha um nome de usuário (este será o usuário administrador;</li>
+<li>Escolha uma senha para esse usuário. *<em>Não a esqueça</em>;</li>
+<li>No nosso caso, selecione a opção "Solicitar minha senha para entrar", pois assim, o usuário administrador ficará mais protegido;</li>
+</ul>
+</li>
+<li>
+<p>Clique em continuar. <strong>A instalação será iniciada. O tempo de duração depende do hardware escolhido pela máquina virtual. Para as configurações recomendadas, o tempo médio é de <em>20 a 30 minutos</em></strong>.</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="31-instalando-o-ubuntu-server">3.1 Instalando o Ubuntu Server</h2>
+<blockquote>
+<ol>
+<li>
+<p>Após clicar em Iniciar no virtualBox, Selecione a linguagem. Como não há em Português, selecione <em>English</em> e aperte a tecla Enter.</p>
+</li>
+<li>
+<p>Selecione <em>continue without updating</em>.</p>
+</li>
+<li>
+<p>Selecione o padrão de seu teclado, no caso, selecione <em>Portuguese (Brazil)</em> usando a seta para cima e mova o cursor para Done. Em seguida, aperte Enter. </p>
+</li>
+<li>
+<p>Este é um passo <strong>Muito Importante</strong>. O Ubuntu vai tentar gerar um Ipv4 para você.</p>
+<ul>
+<li>O formato do IPv4 é 192.168.x.xxx. Certifique-se de entar nesse formato;</li>
+<li>Lembre-se de ter configurado corretamente o item <strong>2.10</strong>. </li>
+</ul>
+</li>
+<li>
+<p>Não utilizaremos Proxy, logo deixe-o em branco e aperte a tecla enter em Done.</p>
+</li>
+<li>
+<p>Aperte a tecla enter novamente na tela "mirror address", pois não precisaremos configurar isso.</p>
+</li>
+<li>
+<p>Selecione a opção "Use an Entire Disk" para formatar o Disco Virtual sem criar partições.</p>
+</li>
+<li>
+<p>Confirme o disco selecionado apertando enter e depois em "continue" para confirmar a formatação do disco.</p>
+</li>
+<li>
+<p>Vide item 2.6.</p>
+</li>
+<li>
+<p>Na próxima tela, selecione com enter a opção "Open SSHServer" e confirme.</p>
+</li>
+<li>
+<p>Na próxima tela, não precisamos de nenhum software adicional, logo não marque nenhum e confirme.</p>
+</li>
+<li>
+<p>Aguarde a instação finalizar.</p>
+</li>
+<li>
+<p>logue no Ubuntu Server usando as credenciais inseridas no item 3.1.9.</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="32-instalando-o-windows-7-professional">3.2 Instalando o Windows 7 professional</h2>
+<blockquote>
+<ol>
+<li>
+<p>Após clicar em Iniciar, será aberta a instalação do Windows 7 Pro. Selecione o padrão de seu teclado utilizando o mouse. </p>
+</li>
+<li>
+<p>Clique em <strong>Instalar Agora</strong> e clique em aceitar os Termos da Licença.</p>
+</li>
+<li>
+<p>Selecione a <strong>Instalação Personalizada</strong> para instalar o Windows.</p>
+</li>
+<li>
+<p>Clique em <strong>Opções de Unidade</strong>, clique em <strong>Novo</strong> e clique em <strong>Aplicar</strong>. Confirme.</p>
+</li>
+<li>
+<p>Selecione o disco do tipo <strong>Primário</strong> e clique em avançar. Será nesse disco que será instalado o Windows.</p>
+</li>
+<li>
+<p>Aguarde a instalação do Windows. <strong>Isso pode demorar</strong> dependendo das configurações da máquina virtual selecionadas.</p>
+</li>
+<li>
+<p>Escolha um nome de usuário e digite uma senha + uma dica de senha.</p>
+</li>
+<li>
+<p>Após isso, o windows estará <strong>pronto para uso</strong>.</p>
+</li>
+</ol>
+</blockquote>
+<p>Desative o firewall do Windows 7 pesquisando no menu Iniciar "Firewall do Windows". Clique em "firewall do Windows", clique em "ativar ou desativar o Firewall do Windows" e desative-o. Após isso clique em "Aplicar".</p>
+<h2 id="4-configurando-o-ubuntu-server">4. Configurando o Ubuntu Server</h2>
+<p><strong>Vamos utilizar o Ubuntu Server a partir de agora</strong>.</p>
+<p>Precisamos atualizamos os packages do sistema. Para isso, após o item 3.1.13, execute os seguintes comandos.</p>
+<blockquote>
+<pre><code>$ sudo su        #para entrar em modo root.
+$ apt update     #para atualizar a lista de pacotes disponíveis.
+$ apt upgrade    #realiza a instaçação dessa nova lista de pacotes.
+</code></pre>
+</blockquote>
+<h2 id="5-instalando-e-configurando-o-samba">5. Instalando e Configurando o Samba</h2>
+<p>Agora, precisamos instalar o Samba. Para isso, execute o seguinte comando:</p>
+<blockquote>
+<pre><code>$ apt install samba
+</code></pre>
+</blockquote>
+<p>Vamos configurar o Samba. Para isso, crie uma cópia do arquivo de configuração do Samba:</p>
+<blockquote>
+<pre><code>$ mv /etc/samba/smb.conf /etc/samba/smb.conf.old     #isso criará uma espécie de backup
+</code></pre>
+</blockquote>
+<p>Edite o arquivo de configuração do Samba:</p>
+<blockquote>
+<pre><code>$ nano /etc/samba/smb.conf
+</code></pre>
+</blockquote>
+<p>Insira o seguinte código dentro de smb.conf:</p>
+<pre><code>[global]
+
+    # Nome do grupo em que as máquinas estarão inseridas
+    workgroup = nome_do_seu_grupo
+
+    # Indetificador desta máquina ao ser acessada pelas outras na mesma rede
+    netbios name = seu_identificador
+
+    # Descrição do servidor
+    server string = %h Server
+
+    # Permite fornecer suporte a Windows
+    wins support = yes
+
+    # Não permite conexão por proxy
+    dns proxy = no
+
+    # Local onde ficarão os arquivos de log
+    log file = /var/log/samba/log%m
+
+    # Tamanho máximo de um arquivo de log (em KB)
+    max log size = 1000
+
+    # Impede que usuário root (adm) seja usado para login nas outras máquinas, por questões de segurança
+    invalid users = root
+
+    # Diz que o servidor foi configurado como um membro normal do grupo de trabalho
+    server role = standalone server
+
+    # Permita a criptografia de senhas
+    encrypt passwords = yes
+
+# Configuração de uma Pasta pública. Insira nos colchetes o nome da pasta
+[nome_pasta]
+
+    # Mostre onde essa pasta está localizada.
+    path = /home/caminho_da_sua_pasta
+
+    # permite edição do arquivo
+    writable = yes
+
+    # torna o arquivo disponível
+    available = yes
+</code></pre>
+<p>após isso, salve usando <code>ctrl+O</code> e saia do editor usando <code>ctrl+x</code>. *<em>NÃO ESQUEÇA de criar a pasta no mesmo caminho declarado em</em> <code>path</code>.</p>
+<p>Para testar se o que você digitou está com a sintaxe correta, execute o comando:</p>
+<blockquote>
+<pre><code>$ testparm
+</code></pre>
+</blockquote>
+<p>Se nenhum erro foi acusado, podemos prosseguir para o próximo passo.</p>
+<h2 id="6-testando-a-conectividade-entre-o-windows-e-o-linux-server">6. Testando a conectividade entre o Windows e o Linux Server</h2>
+<p>Instale o pacote net-tools no Ubuntu e execute o comando <code>ifconfig</code>:</p>
+<blockquote>
+<pre><code>$ apt install net-tools
+$ ifconfig
+</code></pre>
+</blockquote>
+<p>Será mostrada as configurações de IP.</p>
+<pre><code>enp0s3: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500
+inet 192.168.0.115  netmask 255.255.255.0  broadcast 192.168.0.255
+inet6 fe80::7682:b41c:b8ff:546  prefixlen 64  scopeid 0x20&lt;link&gt;
+ether 08:00:27:d6:54:26  txqueuelen 1000  (Ethernet)
+RX packets 778805  bytes 868576217 (868.5 MB)
+RX errors 0  dropped 0  overruns 0  frame 0
+TX packets 194332  bytes 25740557 (25.7 MB)
+TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+</code></pre>
+<p>aqui verificamos que o IPv4 da máquina Linux é <strong>192.168.0.115</strong>.</p>
+<p>Agora, vamos ver qual o IPv4 da máquina Windows. Para isso, aperte <code>windows+R</code> e digite <strong>cmd</strong>. Após isso, digite o seguinte comando:</p>
+<blockquote>
+<pre><code>$ ipconfig
+</code></pre>
+</blockquote>
+<p>Será mostrada as conigurações de IP da máquina Windows.</p>
+<blockquote>
+<pre><code>$ Endereco de IPv4...............: 192.168.0.111
+</code></pre>
+</blockquote>
+<p>Aqui, verificamos que o IPv4 da máquina Windows é <strong>192.169.0.111</strong>.</p>
+<p>Para testarmos a conectividade entre Linux e Windows, digitamos na máquina Linux o seguinte comando:</p>
+<blockquote>
+<pre><code>$ ping IPv4_máquina_windows
+</code></pre>
+</blockquote>
+<p>E para testarmos a conectividade entre Windows e Linux, digitamos na máquina Windows o seguinte comando:</p>
+<blockquote>
+<pre><code>$ ping IPv4_máquina_linux
+</code></pre>
+</blockquote>
+<p>Se não houver nenhuma perda de dados, ambas as máquinas estão se <strong>comunicando</strong>.</p>
+<h2 id="7-file-sharing-entre-ambas-as-maquinas">7. File Sharing entre ambas as Máquinas</h2>
+<p>Na máquina Windows:</p>
+<ul>
+<li>clique em meu computador.</li>
+<li>Botão direito -&gt; propriedades.</li>
+<li>Clique em alterar configurações.</li>
+<li>Na aba Nome do Computador, clique em Alterar...</li>
+<li>Altere o nome do Grupo de Trabalho para o nome do workgroup que você escolheu no arquivo de configuração do samba.</li>
+<li>Clique em Salvar.</li>
+<li>Clique em Rede. Selecione a máquina Linux. Ela pode ser identificada pelo netbios name que você escolheu no arquivo de configuração do Samba.</li>
+<li>Abrirá uma caixa de autenticação.</li>
+</ul>
+<p>Por segurança, colocamos no arquivos de configuração do Samba dizendo que os usuários inválidos (invalid users) são o root (adm). Logo, precisamos criar um usuário que não é administrador para realizarmos a autenticação e podermos fazer o compartilhamento de arquivos.</p>
+<p>Na máquina Linux, digite o comando:</p>
+<blockquote>
+<pre><code>$ adduser nome_usuario
+</code></pre>
+</blockquote>
+<p>Após isso, torne esse usuário passível de autenticação do Samba.</p>
+<blockquote>
+<pre><code>$ smbpasswd -a nome_usuario
+</code></pre>
+</blockquote>
+<p>Após, reinicie ambas as máquinas usando o comando:</p>
+<blockquote>
+<pre><code>$ reboot
+</code></pre>
+</blockquote>
+<p>Na Máquina Windows, em Rede, realize a autenticação requerida. Após isso, irá aparecer a pasta que vocẽ criou para compartilhamento disponível para visualização.</p>
+<h2 id="8-nao-consegue-ver-a-pasta">8. Não consegue ver a Pasta?</h2>
+<p>Talvez o problema seja permissão.</p>
+<p>Execute o seguinte comando na pasta a ser compartilhada.</p>
+<blockquote>
+<pre><code>$ chmod 770 -R ../pasta_a_ser_compartilhada
+</code></pre>
+</blockquote>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href=".." title="Home" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Anterior
+                </span>
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../aula2/" title="2. Criação de Servidor e hospedagem de cliente" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Próximo
+                </span>
+                2. Criação de Servidor e hospedagem de cliente
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5f27aba8.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "search.config.lang": "pt", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Digite para iniciar a busca", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.27c6a5e6.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
